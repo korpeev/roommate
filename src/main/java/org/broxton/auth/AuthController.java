@@ -1,6 +1,7 @@
 package org.broxton.auth;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.broxton.auth.dto.RefreshTokenRequestDto;
 import org.broxton.auth.dto.TokensGeneratedDto;
@@ -19,17 +20,17 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/register")
-  public ResponseEntity<UserAuthDto> register(@RequestBody UserSignUpRequestDto dto) {
+  public ResponseEntity<UserAuthDto> register(@Valid @RequestBody UserSignUpRequestDto dto) {
     return authService.register(dto);
   }
 
   @PostMapping("/login")
-  public ResponseEntity<UserAuthDto> login(@RequestBody UserSiginRequestDto dto) {
+  public ResponseEntity<UserAuthDto> login(@Valid @RequestBody UserSiginRequestDto dto) {
     return authService.authenticate(dto);
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<TokensGeneratedDto> refresh(@RequestBody RefreshTokenRequestDto dto) {
+  public ResponseEntity<TokensGeneratedDto> refresh(@Valid @RequestBody RefreshTokenRequestDto dto) {
     return authService.refreshTokens(dto);
   }
 }

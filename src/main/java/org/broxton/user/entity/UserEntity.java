@@ -20,8 +20,11 @@ public class UserEntity {
   @Id
   private Long id;
 
+  @Column(unique = true, nullable = false)
   private String username;
+  @Column(unique = true, nullable = false)
   private String email;
+
   private String password;
 
   @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
@@ -33,7 +36,7 @@ public class UserEntity {
   private Set<Role> roles = new HashSet<>();
 
   @CreationTimestamp
-  @Column(name = "created_at")
+  @Column(name = "created_at", updatable = false)
   private LocalDateTime createdAt;
 
   @UpdateTimestamp

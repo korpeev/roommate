@@ -69,15 +69,15 @@ public class AuthService {
 
   public ResponseEntity<TokensGeneratedDto> refreshTokens(RefreshTokenRequestDto dto) {
 
-    if (jwtUtil.isTokenExpired(dto.getRefreshToken(), TokenType.REFRESH)) {
+    if (jwtUtil.isTokenExpired(dto.refreshToken(), TokenType.REFRESH)) {
       throw new TokenInvalidException("Token expired");
     }
 
-    String email = jwtUtil.getEmail(dto.getRefreshToken(), TokenType.REFRESH);
+    String email = jwtUtil.getEmail(dto.refreshToken(), TokenType.REFRESH);
     UserEntity user = userService.findUserByEmail(email);
 
-    boolean tokenIsValid = user.getRefreshToken().equals(dto.getRefreshToken())
-            && jwtUtil.validateToken(dto.getRefreshToken(), user.getEmail(), TokenType.REFRESH);
+    boolean tokenIsValid = user.getRefreshToken().equals(dto.refreshToken())
+            && jwtUtil.validateToken(dto.refreshToken(), user.getEmail(), TokenType.REFRESH);
 
     if (!tokenIsValid) {
       throw new TokenInvalidException("Token invalid");
