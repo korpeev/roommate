@@ -1,32 +1,37 @@
-package org.broxton.user.entity;
-
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+package org.broxton.user.models;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-  @Autowired
-  private final UserEntity userEntity;
+  private final String email;
+  private final String password;
+  private final Boolean isBanned;
+  private final Collection<? extends GrantedAuthority> authorities;
+
+  public CustomUserDetails(String email, String password, Boolean isBanned, List<GrantedAuthority> authorities) {
+    this.email = email;
+    this.password = password;
+    this.isBanned = isBanned;
+    this.authorities = authorities;
+  }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(userEntity.getRole());
+    return authorities;
   }
 
   @Override
   public String getPassword() {
-    return userEntity.getPassword();
+    return password;
   }
 
   @Override
   public String getUsername() {
-    return userEntity.gus;
+    return email;
   }
 
   @Override
@@ -46,6 +51,6 @@ public class CustomUserDetails implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return UserDetails.super.isEnabled();
+    return isBanned;
   }
 }
