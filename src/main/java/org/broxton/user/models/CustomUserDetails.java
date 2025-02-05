@@ -1,4 +1,5 @@
 package org.broxton.user.models;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -7,12 +8,15 @@ import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
 
+  @Getter
+  private final Long userId;
   private final String email;
   private final String password;
   private final Boolean isBanned;
   private final Collection<? extends GrantedAuthority> authorities;
 
-  public CustomUserDetails(String email, String password, Boolean isBanned, List<GrantedAuthority> authorities) {
+  public CustomUserDetails(Long userId, String email, String password, Boolean isBanned, List<GrantedAuthority> authorities) {
+    this.userId = userId;
     this.email = email;
     this.password = password;
     this.isBanned = isBanned;

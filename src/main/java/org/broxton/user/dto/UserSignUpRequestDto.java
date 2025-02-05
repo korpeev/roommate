@@ -3,8 +3,10 @@ package org.broxton.user.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class UserSignUpRequestDto {
   @NotEmpty(message = "Username is required")
   private String username;

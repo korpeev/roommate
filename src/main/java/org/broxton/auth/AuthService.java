@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.broxton.auth.dto.RefreshTokenRequestDto;
 import org.broxton.auth.dto.TokensGeneratedDto;
+import org.broxton.auth.mapper.AuthMapper;
 import org.broxton.exceptions.TokenInvalidException;
 import org.broxton.user.dto.*;
 import org.broxton.user.entity.UserEntity;
@@ -23,48 +24,18 @@ public class AuthService {
 
   private final JwtUtil jwtUtil;
   private final UserService userService;
+  private final AuthMapper authMapper;
 
   @Transactional
   public ResponseEntity<UserAuthDto> register(UserSignUpRequestDto dto) {
     UserEntity user = userService.createUser(dto);
-
-    TokensGeneratedDto userTokens = generateUserTokens(user);
-    userService.updateUserRefreshToken(user.getId(), userTokens.getRefreshToken());
-
-    UserAuthDto userAuthDto = UserAuthDto.builder()
-            .tokens(userTokens)
-            .user(UserDto.builder()
-                    .email(user.getEmail())
-                    .isBanned(user.getIsBanned())
-                    .username(user.getUsername())
-                    .build())
-            .build();
-
-    return new ResponseEntity<>(userAuthDto, HttpStatus.CREATED);
+    return new ResponseEntity<>(makeUserAuthResponse(user), HttpStatus.CREATED);
   }
 
   @Transactional
   public ResponseEntity<UserAuthDto> authenticate(UserSiginRequestDto dto) {
     UserEntity user = userService.validateAndGetUser(dto);
-
-    TokensGeneratedDto userTokens = generateUserTokens(user);
-    user.setRefreshToken(userTokens.getRefreshToken());
-
-    userService.updateUserRefreshToken(user.getId(), userTokens.getRefreshToken());
-
-    UserDto userDto = UserDto.builder()
-            .email(user.getEmail())
-            .username(user.getUsername())
-            .isBanned(user.getIsBanned())
-            .build();
-
-    UserAuthDto userAuthDto = UserAuthDto.builder()
-            .user(userDto)
-            .tokens(userTokens)
-            .build();
-
-
-    return new ResponseEntity<>(userAuthDto, HttpStatus.OK);
+    return new ResponseEntity<>(makeUserAuthResponse(user), HttpStatus.OK);
   }
 
   public ResponseEntity<TokensGeneratedDto> refreshTokens(RefreshTokenRequestDto dto) {
@@ -88,6 +59,12 @@ public class AuthService {
     userService.updateUserRefreshToken(user.getId(), userTokens.getRefreshToken());
 
     return new ResponseEntity<>(userTokens, HttpStatus.OK);
+  }
+
+  private UserAuthDto makeUserAuthResponse(UserEntity user) {
+    TokensGeneratedDto userTokens = generateUserTokens(user);
+    userService.updateUserRefreshToken(user.getId(), userTokens.getRefreshToken());
+    return authMapper.toUserAuthDto(user, userTokens);
   }
 
   private TokensGeneratedDto generateUserTokens(UserEntity user) {

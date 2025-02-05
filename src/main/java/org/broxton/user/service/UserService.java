@@ -1,10 +1,13 @@
 package org.broxton.user.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.broxton.exceptions.*;
 import org.broxton.user.dto.*;
 import org.broxton.user.entity.Role;
 import org.broxton.user.entity.UserEntity;
+import org.broxton.user.mappers.UserMapper;
 import org.broxton.user.models.UserRoles;
 import org.broxton.user.repository.RoleRepository;
 import org.broxton.user.repository.UserRepository;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -22,18 +26,18 @@ public class UserService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
+  private final UserMapper userMapper;
 
 
+  @Transactional
   public UserEntity createUser(UserSignUpRequestDto dto) {
     userRepository.findByEmail(dto.getEmail()).ifPresent(existingUser -> {
       throw new UserAlreadyExistsException("User already exists");
     });
 
-    UserEntity user = new UserEntity();
-    user.setUsername(dto.getUsername());
-    user.setEmail(dto.getEmail());
-    user.setPassword(passwordEncoder.encode(dto.getPassword()));
+    UserEntity user = userMapper.toEntity(dto, passwordEncoder);
     setDefaultUserRoleForNewUser(user);
+
     userRepository.save(user);
     return findUserByEmail(user.getEmail());
   }
@@ -56,33 +60,23 @@ public class UserService {
   public ResponseEntity<UserDto> getMe(String email) {
     UserEntity user = findUserByEmail(email);
 
-    return new ResponseEntity<>(UserDto.builder()
-            .isBanned(user.getIsBanned())
-            .email(user.getEmail())
-            .username(user.getUsername())
-            .build(), HttpStatus.OK);
+    return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
   };
 
   public UserEntity findUserById(Long id) {
     return userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException("User not found by given email"));
+            .orElseThrow(() -> new UserNotFoundException("User not found by given id"));
   }
 
   public void updateUserById(Long id, UserUpdateDto dto) {
     UserEntity user = findUserById(id);
-    user.setUsername(dto.getUsername());
-    user.setEmail(dto.getEmail());
-    user.setIsBanned(dto.getIsBanned());
-    user.setRefreshToken(dto.getRefreshToken());
-
+    userMapper.toEntityUserUpdateDto(dto, user);
     userRepository.save(user);
   }
 
+  @Transactional
   public void updateUserRefreshToken(Long id, String refreshToken) {
-    UserEntity user = findUserById(id);
-    user.setRefreshToken(refreshToken);
-    userRepository.save(user);
-
+    userRepository.updateRefreshToken(id, refreshToken);
   }
 
   public UserEntity findUserByEmail(String email) {

@@ -47,6 +47,16 @@ public class GlobalExceptionHandler {
     return buildErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
   }
 
+  @ExceptionHandler(ProfileAlreadyExist.class)
+  public ResponseEntity<CustomErrorResponse> handleProfileAlreadyExistException(ProfileAlreadyExist ex) {
+    return buildErrorResponse(ex.getMessage(), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(ProfileNotFoundException.class)
+  public ResponseEntity<CustomErrorResponse> handleProfileNotFoundException(ProfileNotFoundException ex) {
+    return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
     Map<String, String> errors = new HashMap<>();

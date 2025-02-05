@@ -8,7 +8,5 @@ import lombok.Data;
 public class UserUpdateDto {
   private String username;
   private String email;
-  private Boolean isBanned;
   private String password;
-  private String refreshToken;
 }
