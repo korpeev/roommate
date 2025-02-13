@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -75,6 +74,16 @@ public class GlobalExceptionHandler {
       errors.put(violation.getPropertyPath().toString(), violation.getMessage());
     });
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(TokenExceptions.MissingTokenException.class)
+  public ResponseEntity<CustomErrorResponse> handleMissingTokenException(TokenExceptions.MissingTokenException ex) {
+    return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(UserExceptions.UserUnauthorizedException.class)
+  public ResponseEntity<CustomErrorResponse> handleUserUnauthorizedException(UserExceptions.UserUnauthorizedException ex) {
+    return buildErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
   }
 
   private ResponseEntity<CustomErrorResponse> buildErrorResponse(String message, HttpStatus httpStatus) {

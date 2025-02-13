@@ -1,6 +1,7 @@
 package org.broxton.user.repository;
 
 import org.broxton.user.entity.UserEntity;
+import org.broxton.user.entity.UserPreferences;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

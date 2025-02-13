@@ -25,7 +25,6 @@ public class ProfileEntity {
   private GenderType gender;
   private String bio;
 
-  @OneToOne
-  @JoinColumn(name = "user_id")
+  @OneToOne(mappedBy = "profile")
   private UserEntity user;
 }

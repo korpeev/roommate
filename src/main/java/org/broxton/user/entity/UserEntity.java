@@ -5,12 +5,15 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.broxton.listing.ListingEntity;
 import org.broxton.profile.ProfileEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Table(
@@ -50,9 +53,15 @@ public class UserEntity {
   @Column(name = "refresh_token")
   private String refreshToken;
 
-  @OneToOne(mappedBy = "user", cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
+  @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
+  @JoinColumn(name = "profile_id")
   private ProfileEntity profile;
 
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  private UserPreferences userPreferences;
+
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+  private List<ListingEntity> listings;
 
   @CreationTimestamp
   @Column(name = "created_at", updatable = false)
