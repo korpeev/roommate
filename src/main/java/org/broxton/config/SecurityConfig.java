@@ -3,13 +3,14 @@ package org.broxton.config;
 import lombok.RequiredArgsConstructor;
 import org.broxton.user.service.CustomUserDetailsService;
 import org.broxton.utils.JwtAuthenticationEntryPoint;
-import org.broxton.utils.JwtFilter;
+import org.broxton.filters.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,10 +22,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -32,20 +36,17 @@ public class SecurityConfig {
   private final JwtFilter jwtFilter;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
+
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**")
-                .permitAll()
-                .requestMatchers("/api/v1/auth/**")
-                .permitAll()
-                .anyRequest().authenticated())
+                .anyRequest(). permitAll())
         .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+            .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
