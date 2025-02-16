@@ -1,5 +1,6 @@
 package org.broxton.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -8,6 +9,7 @@ import org.broxton.common.CommonValidationGroups;
 import org.broxton.profile.GenderType;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,4 +25,9 @@ public class UserPreferencesDto {
   private BigDecimal minPrice;
   private BigDecimal maxPrice;
   private Set<GenderType> genderPreferences = new HashSet<>();
+
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private LocalDateTime createdAt;
+  @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+  private LocalDateTime updatedAt;
 }

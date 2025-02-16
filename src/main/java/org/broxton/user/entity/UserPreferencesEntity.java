@@ -13,10 +13,10 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UserPreferences extends BaseEntity {
+public class UserPreferencesEntity extends BaseEntity {
   private Boolean smoking;
   private Boolean drinking;
 

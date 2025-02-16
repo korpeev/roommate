@@ -1,6 +1,5 @@
 package org.broxton.user.mappers;
 
-import org.broxton.user.dto.UserAuthDto;
 import org.broxton.user.dto.UserDto;
 import org.broxton.user.dto.UserSignUpRequestDto;
 import org.broxton.user.dto.UserUpdateDto;
@@ -9,10 +8,9 @@ import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = UserPreferencesMapper.class)
 public interface UserMapper {
   UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
   UserDto toDto(UserEntity user);
 
   UserEntity toEntity(UserDto userDto);

@@ -7,7 +7,7 @@ import org.broxton.exceptions.*;
 import org.broxton.user.dto.*;
 import org.broxton.user.entity.Role;
 import org.broxton.user.entity.UserEntity;
-import org.broxton.user.entity.UserPreferences;
+import org.broxton.user.entity.UserPreferencesEntity;
 import org.broxton.user.mappers.UserMapper;
 import org.broxton.user.mappers.UserPreferencesMapper;
 import org.broxton.user.models.UserRoles;
@@ -29,7 +29,6 @@ public class UserService {
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
-  private final UserPreferencesMapper userPreferencesMapper;
 
 
   @Transactional
@@ -62,7 +61,7 @@ public class UserService {
 
   public ResponseEntity<UserDto> getMe(String email) {
     UserEntity user = findUserByEmail(email);
-
+    System.out.println(user.getUserPreferences().getId());
     return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
   };
 
@@ -85,20 +84,6 @@ public class UserService {
   public UserEntity findUserByEmail(String email) {
    return userRepository.findByEmail(email)
             .orElseThrow(() -> new UserNotFoundException("User not found by given email"));
-  }
-
-  public ResponseEntity<UserPreferencesDto> createUserPreferences (Long userId, UserPreferencesDto userPreferencesDto) {
-
-    UserEntity user = findUserById(userId);
-
-    if (user.getUserPreferences() != null) {
-      throw new RuntimeException("User preferences already exists");
-    }
-
-    UserPreferences newUserPreferences = userPreferencesMapper.toEntity(userPreferencesDto);
-    user.setUserPreferences(newUserPreferences);
-    userRepository.save(user);
-    return new ResponseEntity<>(userPreferencesDto, HttpStatus.CREATED);
   }
 
   private void setDefaultUserRoleForNewUser(UserEntity user) {

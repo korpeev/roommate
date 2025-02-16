@@ -11,7 +11,7 @@ import org.broxton.common.CommonValidationGroups;
 import org.broxton.user.dto.UserDto;
 import org.broxton.user.dto.UserPreferencesDto;
 import org.broxton.user.models.CustomUserDetails;
-import org.broxton.user.service.CustomUserDetailsService;
+import org.broxton.user.service.UserPreferencesService;
 import org.broxton.user.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
   private final UserService userService;
+  private final UserPreferencesService userPreferencesService;
 
   @GetMapping("/me")
   @ApiResponse(
@@ -49,6 +50,22 @@ public class UserController {
                                     @Validated(CommonValidationGroups.OnCreate.class)
                                     @RequestBody UserPreferencesDto userPreferencesDto,
                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
-    return userService.createUserPreferences(userDetails.getUserId(), userPreferencesDto);
+    return userPreferencesService.createUserPreferences(userPreferencesDto, userDetails.getUserId());
   }
+
+  @GetMapping("/preferences")
+  public ResponseEntity<UserPreferencesDto> getUserPreferences(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    return userPreferencesService.getUserPreferences(userDetails.getUserId());
+  }
+
+  @PutMapping("/preferences/update")
+  public ResponseEntity<UserPreferencesDto> updateUserPreferences(
+          @JsonView(CommonValidationGroups.OnUpdate.class)
+          @Validated(CommonValidationGroups.OnUpdate.class)
+          @AuthenticationPrincipal CustomUserDetails userDetails,
+          @RequestBody UserPreferencesDto userPreferencesDto
+  ) {
+    return userPreferencesService.updateUserPreferences(userPreferencesDto);
+  }
+
 }

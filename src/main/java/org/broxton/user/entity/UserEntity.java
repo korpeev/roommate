@@ -13,7 +13,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Table(
@@ -58,7 +57,7 @@ public class UserEntity {
   private ProfileEntity profile;
 
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-  private UserPreferences userPreferences;
+  private UserPreferencesEntity userPreferences;
 
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
   private List<ListingEntity> listings;
