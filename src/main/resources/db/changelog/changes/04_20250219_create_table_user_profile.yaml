@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04_20250219_create_table_user_profile
+      author: broxton
+      changes:
+        - createTable:
+            tableName: profiles
+            columns:
+              - column:
+                  name: profile_photo
+                  type: varchar(255)
+              - column:
+                  name: full_name
+                  type: varchar(255)
+              - column:
+                  name: age
+                  type: smallint
+              - column:
+                  name: gender
+                  type: varchar(50)
+              - column:
+                  name: bio
+                  type: text
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+        - addForeignKeyConstraint:
+            baseTableName: profiles
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_profiles_users
+            onDelete: CASCADE

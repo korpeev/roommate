@@ -26,7 +26,7 @@ public class ProfileService {
   private final UserService userService;
   private final ProfileMapper profileMapper;
 
-  private final String UPLOAD_DIR = "uploads/profile-pictures/";
+  private final String UPLOAD_DIR = "/opt/uploads/";
 
   public ResponseEntity<ProfileDto> createProfile(Long userId, ProfileCreateRequestDto dto) {
     profileRepository.findProfileByUserId(userId).ifPresent(existProfile -> {
@@ -74,11 +74,11 @@ public class ProfileService {
       ProfileEntity profileEntity = profileRepository.findProfileByUserId(userId)
               .orElseThrow(() -> new ProfileNotFoundException("User profile not found by user id"));
 
-      profileEntity.setProfilePhoto(filePath.toString());
+      profileEntity.setProfilePhoto("/uploads/" + fileName);
 
       profileRepository.save(profileEntity);
 
-      return ResponseEntity.ok("File uploaded successfully: " + filePath.toString());
+      return ResponseEntity.ok("File uploaded successfully");
     } catch (IOException e) {
       return ResponseEntity.status(500).body("File upload failed: " + e.getMessage());
     }

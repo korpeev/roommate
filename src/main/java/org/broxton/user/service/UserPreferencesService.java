@@ -39,12 +39,14 @@ public class UserPreferencesService {
     return new ResponseEntity<>(userPreferencesMapper.toDto(updatedUserPreferences), HttpStatus.OK);
   }
 
+  public UserPreferencesEntity getUserPreferencesByUserId(Long userId) {
+    return userPreferencesRepository.findUserPreferencesByUserId(userId)
+            .orElseThrow(() -> new RuntimeException("User preferences not found"));
+  }
+
   public ResponseEntity<UserPreferencesDto> getUserPreferences(Long userId) {
-    UserEntity user = userService.findUserById(userId);
-    if (user.getUserPreferences() == null) {
-      throw new RuntimeException("User preferences not found");
-    }
-    return new ResponseEntity<>(userPreferencesMapper.toDto(user.getUserPreferences()), HttpStatus.OK);
+    UserPreferencesEntity userPreferences = getUserPreferencesByUserId(userId);
+    return new ResponseEntity<>(userPreferencesMapper.toDto(userPreferences), HttpStatus.OK);
 
   }
 }

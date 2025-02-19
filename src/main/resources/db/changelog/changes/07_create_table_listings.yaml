@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07_create_table_listings
+      author: broxton
+      changes:
+        - createTable:
+            tableName: listings
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: title
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: price_per_month
+                  type: numeric(9, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gender_preference
+                  type: varchar(50)
+              - column:
+                  name: smoking
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: drinking
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: allow_pets
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: type
+                  type: varchar(50)
+                  defaultValue: "ROOMMATE_SEARCH"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: owner_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_listings_owners
+                    references: users(id)

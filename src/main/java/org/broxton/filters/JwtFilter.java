@@ -37,6 +37,7 @@ public class JwtFilter extends OncePerRequestFilter {
           "^(?:/swagger-ui/.*|" +  // Swagger UI
                   "/v3/api-docs.*|" +     // OpenAPI Docs
                   "/swagger-ui\\.html|" + // Swagger HTML
+                  "/uploads/.*|" +
                   "/api/v1/auth/.*)$"    // Register
   );
 

@@ -24,7 +24,7 @@ public class UserPreferencesDto {
   private Boolean allowPets;
   private BigDecimal minPrice;
   private BigDecimal maxPrice;
-  private Set<GenderType> genderPreferences = new HashSet<>();
+  private GenderType genderPreference;
 
   @JsonProperty(access = JsonProperty.Access.READ_ONLY)
   private LocalDateTime createdAt;

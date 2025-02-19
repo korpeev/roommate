@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 08_add_listings_create_update_timestamp
+      author: broxton
+      changes:
+        - addColumn:
+            tableName: listings
+            columns:
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

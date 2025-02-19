@@ -5,12 +5,14 @@ import org.broxton.common.pagination.PaginationResponse;
 import org.broxton.common.pagination.PaginationResponseCreator;
 import org.broxton.listing.dto.ListingDto;
 import org.broxton.user.entity.UserEntity;
+import org.broxton.user.entity.UserPreferencesEntity;
+import org.broxton.user.service.UserPreferencesService;
 import org.broxton.user.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 
 @Service
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class ListingService {
   private final ListingsRepository listingRepository;
   private final UserService userService;
+  private final UserPreferencesService userPreferencesService;
   private final ListingMapper listingMapper;
 
   public ResponseEntity<ListingDto> createListing(Long userId, ListingDto listingsDto) {
@@ -37,8 +40,8 @@ public class ListingService {
     return ResponseEntity.ok(listingMapper.toDto(updatedListing));
   }
 
-  public ResponseEntity<PaginationResponse<ListingDto>> getListings(Pageable pageable) {
-    Page<ListingEntity> listingEntityPage = listingRepository.findAll(pageable);
+  public ResponseEntity<PaginationResponse<ListingDto>> getListings(Pageable pageable, Specification<ListingEntity> spec) {
+    Page<ListingEntity> listingEntityPage = listingRepository.findAll(spec, pageable);
     return ResponseEntity.ok(PaginationResponseCreator.makePaginationResponse(listingEntityPage, listingMapper::toDto));
   }
 
@@ -58,5 +61,20 @@ public class ListingService {
       throw new RuntimeException("Listing not found");
     }
     listingRepository.deleteById(id);
+  }
+
+  public ResponseEntity<PaginationResponse<ListingDto>> getUserRelatedListings(Long userId, Pageable pageable) {
+   UserPreferencesEntity userPreferences = userPreferencesService.getUserPreferencesByUserId(userId);
+   Page<ListingEntity> listingEntityPage = listingRepository.findMatchingListings(
+           userPreferences.getSmoking(),
+           userPreferences.getDrinking(),
+           userPreferences.getAllowPets(),
+           userPreferences.getMinPrice(),
+           userPreferences.getMaxPrice(),
+           userPreferences.getGenderPreference(),
+           pageable
+   );
+
+    return ResponseEntity.ok(PaginationResponseCreator.makePaginationResponse(listingEntityPage, listingMapper::toDto));
   }
 }

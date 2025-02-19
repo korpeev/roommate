@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05_20250219_create_table_user_preferences
+      author: broxton
+      changes:
+        - createTable:
+            tableName: user_preferences
+            columns:
+              - column:
+                  name: gender_preference
+                  type: varchar(50)
+              - column:
+                  name: smoking
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: drinking
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: allow_pets
+                  type: boolean
+                  defaultValueBoolean: false
+              - column:
+                  name: min_budget
+                  type: numeric(10, 2)
+              - column:
+                  name: max_budget
+                  type: numeric(10, 2)
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    unique: true
+                    primaryKey: true
+        - addForeignKeyConstraint:
+            baseTableName: user_preferences
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_preferences_users
+            onDelete: CASCADE

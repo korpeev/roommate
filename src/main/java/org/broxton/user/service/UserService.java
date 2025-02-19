@@ -61,7 +61,6 @@ public class UserService {
 
   public ResponseEntity<UserDto> getMe(String email) {
     UserEntity user = findUserByEmail(email);
-    System.out.println(user.getUserPreferences().getId());
     return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
   };
 

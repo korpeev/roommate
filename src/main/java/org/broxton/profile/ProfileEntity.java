@@ -13,18 +13,19 @@ import org.broxton.user.entity.UserEntity;
 @Setter
 public class ProfileEntity {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(name = "profile_photo")
   private String profilePhoto;
-  @Column(name = "fullname")
+  @Column(name = "full_name")
   private String fullName;
   private int age;
   @Enumerated(EnumType.STRING)
   private GenderType gender;
   private String bio;
 
-  @OneToOne(mappedBy = "profile")
+  @OneToOne
+  @JoinColumn(name = "user_id")
+  @MapsId
   private UserEntity user;
 }

@@ -62,7 +62,6 @@ public class UserController {
   public ResponseEntity<UserPreferencesDto> updateUserPreferences(
           @JsonView(CommonValidationGroups.OnUpdate.class)
           @Validated(CommonValidationGroups.OnUpdate.class)
-          @AuthenticationPrincipal CustomUserDetails userDetails,
           @RequestBody UserPreferencesDto userPreferencesDto
   ) {
     return userPreferencesService.updateUserPreferences(userPreferencesDto);

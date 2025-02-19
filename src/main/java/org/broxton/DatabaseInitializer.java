@@ -18,10 +18,10 @@ public class DatabaseInitializer implements CommandLineRunner {
 
   @Override
   public void run(String... args) throws Exception {
-    UserRoles userRole =  UserRoles.valueOf("USER");
-    UserRoles adminRole =  UserRoles.valueOf("ADMIN");
-    initializeRole(userRole);
-    initializeRole(adminRole);
+//    UserRoles userRole =  UserRoles.valueOf("USER");
+//    UserRoles adminRole =  UserRoles.valueOf("ADMIN");
+//    initializeRole(userRole);
+//    initializeRole(adminRole);
   }
 
   private void initializeRole(UserRoles roleName) {

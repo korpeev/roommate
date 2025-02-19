@@ -5,9 +5,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 import org.broxton.common.CommonValidationGroups;
 import org.broxton.listing.ListingType;
+import org.broxton.profile.GenderType;
 import org.broxton.user.dto.UserDto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 
 public record ListingDto(
@@ -31,6 +33,14 @@ public record ListingDto(
 
         @Schema(accessMode = Schema.AccessMode.READ_ONLY)
         @Null(groups = {CommonValidationGroups.OnCreate.class, CommonValidationGroups.OnUpdate.class})
-        UserDto owner
+        UserDto owner,
+
+        Boolean smoking,
+        Boolean drinking,
+        Boolean allowPets,
+        GenderType genderPreference,
+
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
 }

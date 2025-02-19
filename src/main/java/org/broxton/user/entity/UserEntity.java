@@ -16,11 +16,7 @@ import java.util.List;
 import java.util.Set;
 
 @Table(
-        name = "users",
-        indexes = {
-                @Index(name = "idx_email", columnList = "email"),
-                @Index(name = "idx_id", columnList = "id"),
-        }
+        name = "users"
 )
 @Entity
 @Getter
@@ -52,8 +48,7 @@ public class UserEntity {
   @Column(name = "refresh_token")
   private String refreshToken;
 
-  @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.REMOVE})
-  @JoinColumn(name = "profile_id")
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   private ProfileEntity profile;
 
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

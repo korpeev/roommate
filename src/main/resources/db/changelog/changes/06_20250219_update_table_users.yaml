@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05_20250219_update_table_users
+      author: broxton
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+        - createIndex:
+            clustered: true
+            tableName: users
+            indexName: idx_users_email
+            unique: true
+            columns:
+              - column:
+                  name: email

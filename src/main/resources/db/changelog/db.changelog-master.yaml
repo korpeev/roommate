@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/01_20250219_create_table_users.yaml
+  - include:
+      file: db/changelog/changes/02_202050219_create_table_roles_and_init_default_roles.yaml
+  - include:
+      file: db/changelog/changes/03_20250219_create_table_users_roles.yaml
+  - include:
+      file: db/changelog/changes/04_20250219_create_table_user_profile.yaml
+  - include:
+      file: db/changelog/changes/05_20250219_create_table_user_preferences.yaml
+  - include:
+      file: db/changelog/changes/06_20250219_update_table_users.yaml
+  - include:
+      file: db/changelog/changes/07_create_table_listings.yaml
+  - include:
+      file: db/changelog/changes/08_add_listings_create_update_timestamp.yaml
